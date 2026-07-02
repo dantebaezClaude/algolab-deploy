@@ -738,7 +738,7 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
     .forEach(el => {
       el.setAttribute('href', waHref);
       // Evento estándar de Meta (píxel + Conversions API): se dispara al hacer clic en cualquier botón de WhatsApp
-      el.addEventListener('click', () => { if (window.sendMetaEvent) sendMetaEvent('Contact'); });
+      el.addEventListener('click', () => { if (window.sendMetaEvent) sendMetaEvent('Lead'); });
     });
   document.getElementById('ig-discover-btn').setAttribute('href', INSTAGRAM_PROFILE_URL);
 
@@ -819,7 +819,7 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
       </div>
       <a class="btn-wa" style="margin-top:.5rem;width:100%;justify-content:center"
          href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quiero más información sobre ' + c.title)}"
-         target="_blank" rel="noopener">💬 Preguntar por ${c.title}</a>
+         target="_blank" rel="noopener" onclick="if(window.sendMetaEvent) sendMetaEvent('Lead')">💬 Preguntar por ${c.title}</a>
     `;
     courseModalEl.classList.add('open');
   }
