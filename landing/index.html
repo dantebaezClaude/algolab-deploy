@@ -200,10 +200,34 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
     text-align: center;
     border: 1px solid rgba(196,181,253,.35);
     box-shadow: 0 4px 16px rgba(109,40,217,.08);
+    width: 100%;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
   }
+  .flyer-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(109,40,217,.16); border-color: var(--purple-light); }
   .flyer-icon { font-size: 2.6rem; display: block; margin-bottom: .6rem; }
   .flyer-title { font-weight: 700; color: var(--purple-dark); font-size: .95rem; margin-bottom: .35rem; }
   .flyer-desc { font-size: .82rem; color: #6B7280; line-height: 1.5; }
+  .flyer-hint { font-size: .76rem; color: var(--purple-mid); font-weight: 700; margin-top: .7rem; }
+
+  /* ── COURSE MODAL ── */
+  .course-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(59,7,100,.6); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .course-modal-overlay.open { display: flex; }
+  .course-modal-card {
+    background: var(--white); border-radius: 22px; max-width: 440px; width: 100%;
+    padding: 2rem 1.75rem; position: relative; text-align: center;
+    animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 25px 70px rgba(0,0,0,.3);
+    max-height: 85vh; overflow-y: auto;
+  }
+  .course-modal-body-inner { text-align: left; }
+  .course-modal-label { font-weight: 700; color: var(--purple-dark); font-size: .9rem; margin-bottom: .3rem; }
+  .course-modal-text { font-size: .9rem; color: #4B5563; line-height: 1.6; margin-bottom: 1.1rem; }
 
   /* ── TRUST STATS ── */
   .stats-strip {
@@ -478,31 +502,36 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
       <p>Cinco laboratorios, un mismo lugar. Elige el que más le llame — o pruébalos.</p>
     </div>
     <div class="flyer-grid">
-      <div class="flyer-card">
+      <button type="button" class="flyer-card" onclick="openCourseModal('roblox')">
         <span class="flyer-icon">🎮</span>
         <div class="flyer-title">Roblox Studio</div>
         <div class="flyer-desc">Construyendo su propio videojuego, listo para publicar.</div>
-      </div>
-      <div class="flyer-card">
+        <div class="flyer-hint">Ver detalles →</div>
+      </button>
+      <button type="button" class="flyer-card" onclick="openCourseModal('robotics')">
         <span class="flyer-icon">🤖</span>
         <div class="flyer-title">Robotics</div>
         <div class="flyer-desc">Programando y armando su robot con ESP32.</div>
-      </div>
-      <div class="flyer-card">
+        <div class="flyer-hint">Ver detalles →</div>
+      </button>
+      <button type="button" class="flyer-card" onclick="openCourseModal('webgames')">
         <span class="flyer-icon">🌐</span>
         <div class="flyer-title">Videojuegos Web</div>
         <div class="flyer-desc">Publicando su primera página y mini-juego en la web.</div>
-      </div>
-      <div class="flyer-card">
+        <div class="flyer-hint">Ver detalles →</div>
+      </button>
+      <button type="button" class="flyer-card" onclick="openCourseModal('lego')">
         <span class="flyer-icon">🧱</span>
         <div class="flyer-title">LEGO Spike</div>
         <div class="flyer-desc">Programando robots con LEGO, listo para competir.</div>
-      </div>
-      <div class="flyer-card">
+        <div class="flyer-hint">Ver detalles →</div>
+      </button>
+      <button type="button" class="flyer-card" onclick="openCourseModal('content')">
         <span class="flyer-icon">📸</span>
         <div class="flyer-title">Creación de Contenido</div>
         <div class="flyer-desc">Grabando y editando su primer contenido digital.</div>
-      </div>
+        <div class="flyer-hint">Ver detalles →</div>
+      </button>
     </div>
   </section>
 
@@ -676,6 +705,14 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
   </div>
 </div>
 
+<!-- ══════════════ MODAL DE CURSO ══════════════ -->
+<div class="course-modal-overlay" id="course-modal" onclick="closeCourseModalOutside(event)">
+  <div class="course-modal-card">
+    <button class="popup-close" onclick="closeCourseModal()">✕</button>
+    <div id="course-modal-body"></div>
+  </div>
+</div>
+
 <script>
   // ══════════════ CONFIGURACIÓN — edita aquí ══════════════
 
@@ -738,6 +775,57 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
   }
   renderInstagram();
 
+  // MODAL DE CURSO — qué construye el alumno y para qué le sirve
+  const COURSES = {
+    roblox: {
+      icon: '🎮', title: 'Roblox Studio', age: '8 – 12 años',
+      build: 'Diseña niveles, personajes y mecánicas de juego dentro de Roblox Studio programando con Lua. Publica su propio juego jugable para que sus amigos lo prueben en línea.',
+      benefit: 'Sus primeras nociones reales de programación y lógica, resolución de problemas paso a paso, y la satisfacción de ver algo que él construyó siendo usado por otros.'
+    },
+    robotics: {
+      icon: '🤖', title: 'Robotics', age: '10 – 15 años',
+      build: 'Arma y programa un robot con microcontrolador ESP32: sensores, motores y control por WiFi. Se lo lleva a casa funcionando.',
+      benefit: 'Conecta el código con el mundo físico — electrónica real, no solo teoría en una pantalla. Desarrolla paciencia, precisión y pensamiento de ingeniería.'
+    },
+    webgames: {
+      icon: '🌐', title: 'Videojuegos Web', age: '10 – 15 años',
+      build: 'Programa con HTML, CSS y JavaScript desde cero. Publica su propia página web y un mini videojuego jugable directo en el navegador.',
+      benefit: 'La misma base de programación web que usan miles de sitios y apps reales. Un portafolio digital propio y la confianza de decir "yo hice esto".'
+    },
+    lego: {
+      icon: '🧱', title: 'LEGO Spike', age: '7 – 12 años',
+      build: 'Construye y programa robots con LEGO Spike Prime usando bloques visuales. Prepara su robot para retos y competencias tipo LEGO League.',
+      benefit: 'La puerta de entrada ideal a la robótica para los más chicos — lógica, construcción y programación sin necesitar saber leer código todavía.'
+    },
+    content: {
+      icon: '📸', title: 'Creación de Contenido', age: '10 – 16 años',
+      build: 'Graba, edita y publica su propio contenido — fotografía, video, YouTube, Instagram — usando herramientas de edición profesional.',
+      benefit: 'Las mismas redes que ya usa todo el día, pero ahora del lado de quien crea, no solo consume. Un portafolio de contenido real y propio.'
+    }
+  };
+
+  const courseModalEl = document.getElementById('course-modal');
+  function openCourseModal(key) {
+    const c = COURSES[key];
+    document.getElementById('course-modal-body').innerHTML = `
+      <div style="font-size:2.5rem;margin-bottom:.5rem">${c.icon}</div>
+      <h3 style="font-size:1.3rem;font-weight:800;color:var(--purple-dark)">${c.title}</h3>
+      <span style="display:inline-block;background:var(--purple-pale);color:var(--purple-main);padding:.25rem .8rem;border-radius:999px;font-size:.78rem;font-weight:700;margin:.6rem 0 1.2rem">${c.age}</span>
+      <div class="course-modal-body-inner">
+        <div class="course-modal-label">🛠️ Qué va a construir</div>
+        <p class="course-modal-text">${c.build}</p>
+        <div class="course-modal-label">🎯 Para qué le sirve</div>
+        <p class="course-modal-text" style="margin-bottom:0">${c.benefit}</p>
+      </div>
+      <a class="btn-wa" style="margin-top:.5rem;width:100%;justify-content:center"
+         href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quiero más información sobre ' + c.title)}"
+         target="_blank" rel="noopener">💬 Preguntar por ${c.title}</a>
+    `;
+    courseModalEl.classList.add('open');
+  }
+  function closeCourseModal() { courseModalEl.classList.remove('open'); }
+  function closeCourseModalOutside(e) { if (e.target === courseModalEl) closeCourseModal(); }
+
   // POPUP DE OFERTA — aparece al cargar/refrescar y al hacer scroll hacia arriba
   const popupEl = document.getElementById('offer-popup');
   function openPopup() { popupEl.classList.add('open'); }
@@ -762,7 +850,7 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
     lastScrollY = y;
   });
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePopup(); closeCourseModal(); } });
 </script>
 </body>
 </html>
