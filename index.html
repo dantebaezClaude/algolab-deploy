@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlgoLab — Kit de Ventas 2026</title>
+<style>
+  :root {
+    --purple-dark:   #3B0764;
+    --purple-main:   #6D28D9;
+    --purple-mid:    #8B5CF6;
+    --purple-light:  #C4B5FD;
+    --purple-pale:   #EDE9FE;
+    --white:         #FFFFFF;
+    --gray-soft:     #F5F3FF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--gray-soft);
+    color: #1E1B4B;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--purple-dark);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(59,7,100,.4);
+  }
+  .nav-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--white);
+    padding: 1rem 2rem 1rem 0;
+    border-right: 1px solid rgba(255,255,255,.15);
+    margin-right: 1rem;
+    letter-spacing: -.5px;
+  }
+  .nav-logo span { color: var(--purple-light); }
+  nav button {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.7);
+    padding: .75rem 1.1rem;
+    cursor: pointer;
+    font-size: .9rem;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  nav button:hover, nav button.active {
+    color: var(--white);
+    border-bottom-color: var(--purple-light);
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  .section.visible { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-main) 60%, var(--purple-mid) 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; position: relative; }
+  .hero p  { font-size: 1.1rem; opacity: .85; margin-top: .5rem; position: relative; }
+  .hero-badges { display: flex; gap: .75rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; position: relative; }
+  .badge {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    color: var(--white);
+    padding: .4rem 1rem;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+  }
+
+  /* ── CARDS GRID ── */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem; }
+
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(109,40,217,.08);
+    border: 1px solid rgba(196,181,253,.3);
+    transition: transform .2s, box-shadow .2s;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(109,40,217,.18); }
+
+  .course-icon {
+    font-size: 2.2rem;
+    margin-bottom: .75rem;
+    display: block;
+  }
+  .course-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--purple-dark);
+    margin-bottom: .4rem;
+  }
+  .course-age {
+    font-size: .8rem;
+    color: var(--purple-mid);
+    font-weight: 600;
+    background: var(--purple-pale);
+    display: inline-block;
+    padding: .2rem .75rem;
+    border-radius: 999px;
+    margin-bottom: .75rem;
+  }
+  .course-desc {
+    font-size: .9rem;
+    color: #4B5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .session-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .session-tag {
+    background: var(--purple-pale);
+    color: var(--purple-main);
+    font-size: .78rem;
+    font-weight: 600;
+    padding: .25rem .7rem;
+    border-radius: 8px;
+  }
+  .session-tag.s5 { background: #FEF3C7; color: #92400E; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(59,7,100,.55);
+    z-index: 200;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp .25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--purple-pale); border: none; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer; font-size: 1rem;
+    color: var(--purple-main); font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal h2 { font-size: 1.4rem; font-weight: 800; color: var(--purple-dark); margin-bottom: .5rem; }
+  .modal-sessions { margin: 1rem 0; }
+  .modal-session {
+    display: flex; align-items: flex-start; gap: .75rem;
+    padding: .75rem 1rem;
+    border-radius: 12px;
+    background: var(--gray-soft);
+    margin-bottom: .5rem;
+    border-left: 4px solid var(--purple-main);
+  }
+  .modal-session .num { font-weight: 800; color: var(--purple-main); font-size: .9rem; white-space: nowrap; }
+  .modal-session .dates { font-size: .9rem; color: #374151; }
+
+  /* ── PRICE CALCULATOR ── */
+  .price-hero {
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple-main));
+    border-radius: 20px;
+    padding: 2.5rem;
+    color: var(--white);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .price-hero h2 { font-size: 1.8rem; font-weight: 800; }
+  .price-hero p { opacity: .8; margin-top: .3rem; }
+  .strike { text-decoration: line-through; opacity: .6; }
+
+  .stepper {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .stepper button {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    border: 2px solid rgba(255,255,255,.4);
+    color: var(--white); font-size: 1.4rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stepper button:hover { background: rgba(255,255,255,.35); }
+  .stepper-count { font-size: 3rem; font-weight: 800; min-width: 60px; text-align: center; }
+  .stepper-label { font-size: .9rem; opacity: .75; }
+
+  .price-display {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .price-unit { font-size: 1rem; opacity: .8; }
+  .price-big { font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; }
+  .price-total { font-size: 1.1rem; opacity: .9; margin-top: .25rem; }
+  .price-savings { font-size: .9rem; background: rgba(255,255,255,.15); border-radius: 8px; padding: .4rem .9rem; display: inline-block; margin-top: .5rem; }
+
+  .discount-table {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(109,40,217,.08);
+    border: 1px solid rgba(196,181,253,.3);
+  }
+  .discount-table table { width: 100%; border-collapse: collapse; }
+  .discount-table th {
+    background: var(--purple-dark);
+    color: var(--white);
+    padding: .9rem 1.2rem;
+    text-align: left;
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .discount-table td { padding: .9rem 1.2rem; font-size: .95rem; border-bottom: 1px solid var(--purple-pale); }
+  .discount-table tr:last-child td { border-bottom: none; }
+  .discount-table tr.active-row td { background: var(--purple-pale); font-weight: 700; color: var(--purple-dark); }
+  .discount-table tr:hover td { background: var(--gray-soft); }
+  .pill-discount {
+    background: var(--purple-main);
+    color: var(--white);
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+  }
+  .pill-discount.hot { background: #059669; }
+
+  /* ── PHRASES ── */
+  .phrase-card {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid rgba(196,181,253,.3);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(109,40,217,.06);
+    transition: box-shadow .2s;
+  }
+  .phrase-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .phrase-header:hover { background: var(--gray-soft); }
+  .phrase-title { font-weight: 700; color: var(--purple-dark); display: flex; align-items: center; gap: .6rem; font-size: 1rem; }
+  .phrase-arrow { color: var(--purple-mid); font-size: 1.1rem; transition: transform .2s; }
+  .phrase-card.open .phrase-arrow { transform: rotate(180deg); }
+  .phrase-body { display: none; padding: 0 1.5rem 1.5rem; }
+  .phrase-card.open .phrase-body { display: block; }
+  .phrase-quote {
+    background: linear-gradient(135deg, var(--purple-pale), #F0EBFF);
+    border-left: 4px solid var(--purple-main);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.2rem;
+    font-size: .97rem;
+    color: #2D1B69;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── TRIGGERS ── */
+  .trigger-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .trigger-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 1.2rem;
+    border: 1px solid rgba(196,181,253,.3);
+    box-shadow: 0 2px 8px rgba(109,40,217,.06);
+    display: flex; align-items: flex-start; gap: .75rem;
+  }
+  .trigger-check {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--purple-pale);
+    color: var(--purple-main);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0; margin-top: .1rem;
+  }
+  .trigger-title { font-weight: 700; color: var(--purple-dark); font-size: .95rem; margin-bottom: .3rem; }
+  .trigger-text { font-size: .85rem; color: #4B5563; line-height: 1.5; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { margin-bottom: 1.5rem; }
+  .section-header h2 { font-size: 1.6rem; font-weight: 800; color: var(--purple-dark); }
+  .section-header p  { color: #6B7280; margin-top: .25rem; font-size: .95rem; }
+
+  /* ── COPY BUTTON ── */
+  .copy-btn {
+    background: var(--purple-pale);
+    border: none;
+    color: var(--purple-main);
+    font-size: .8rem;
+    font-weight: 600;
+    padding: .35rem .9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: .75rem;
+  }
+  .copy-btn:hover { background: var(--purple-light); color: var(--white); }
+  .copy-btn.copied { background: #059669; color: var(--white); }
+
+  /* ── QUICK REF ── */
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .quick-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(196,181,253,.3);
+    box-shadow: 0 2px 8px rgba(109,40,217,.06);
+  }
+  .quick-card h3 { font-size: 1rem; font-weight: 700; color: var(--purple-dark); margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+  .quick-card ul { list-style: none; }
+  .quick-card li {
+    padding: .35rem 0;
+    font-size: .88rem;
+    color: #374151;
+    border-bottom: 1px solid var(--purple-pale);
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .quick-card li:last-child { border-bottom: none; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--purple-main); flex-shrink: 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav { overflow-x: auto; }
+    .hero h1 { font-size: 1.7rem; }
+    .section { padding: 1rem; }
+    .price-big { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Algo<span>Lab</span></div>
+  <button class="active" onclick="showTab('inicio',this)">🏠 Inicio</button>
+  <button onclick="showTab('cursos',this)">📚 Cursos</button>
+  <button onclick="showTab('precios',this)">💰 Precios</button>
+  <button onclick="showTab('cierres',this)">🔥 Cierres</button>
+  <button onclick="showTab('gatillos',this)">🧠 Gatillos</button>
+  <button onclick="showTab('referencia',this)">⚡ Guía Rápida</button>
+</nav>
+
+<!-- ══════════════ INICIO ══════════════ -->
+<div id="inicio" class="section visible">
+
+  <div class="hero">
+    <h1>🌞 Campamentos de Verano AlgoLab 2026</h1>
+    <p>Kit completo para tu equipo de ventas — todo lo que necesitas en un solo lugar</p>
+    <div class="hero-badges">
+      <span class="badge">5 Cursos disponibles</span>
+      <span class="badge">Grupos de máx. 12 alumnos</span>
+      <span class="badge">Hasta 50% de descuento</span>
+      <span class="badge">Demo Day incluido</span>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card" onclick="showTab('cursos', document.querySelector('nav button:nth-child(3)'))">
+      <span style="font-size:2rem">📚</span>
+      <div class="course-title" style="margin-top:.5rem">5 Cursos</div>
+      <p style="font-size:.9rem;color:#6B7280;margin-top:.3rem">Roblox, Robotics, Videojuegos Web, Lego Spike y Creación de Contenido.</p>
+    </div>
+    <div class="card" onclick="showTab('precios', document.querySelector('nav button:nth-child(4)'))">
+      <span style="font-size:2rem">💰</span>
+      <div class="course-title" style="margin-top:.5rem">Desde $3,400</div>
+      <p style="font-size:.9rem;color:#6B7280;margin-top:.3rem">Precio por curso al comprar los 5. Calculadora interactiva incluida.</p>
+    </div>
+    <div class="card" onclick="showTab('cierres', document.querySelector('nav button:nth-child(5)'))">
+      <span style="font-size:2rem">🔥</span>
+      <div class="course-title" style="margin-top:.5rem">5 Frases de Cierre</div>
+      <p style="font-size:.9rem;color:#6B7280;margin-top:.3rem">Frases listas para WhatsApp, llamadas y cierres en persona.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem">
+    <div class="section-header"><h2>Vista rápida — Sesiones 2026</h2></div>
+    <div style="background:var(--white);border-radius:16px;overflow:hidden;border:1px solid rgba(196,181,253,.3);box-shadow:0 2px 12px rgba(109,40,217,.08)">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--purple-dark);color:var(--white)">
+            <th style="padding:.9rem 1.2rem;text-align:left;font-size:.85rem">Sesión</th>
+            <th style="padding:.9rem 1.2rem;text-align:left;font-size:.85rem">Fechas</th>
+            <th style="padding:.9rem 1.2rem;text-align:left;font-size:.85rem">Cursos disponibles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale);font-weight:700">Sesión 1</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">22 jun – 3 jul</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">🎮 Roblox Studio &nbsp;|&nbsp; 🤖 Robotics</td></tr>
+          <tr><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale);font-weight:700">Sesión 2</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">6 jul – 17 jul</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">🌐 Videojuegos Web &nbsp;|&nbsp; 🧱 Lego Spike</td></tr>
+          <tr><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale);font-weight:700">Sesión 3</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">20 jul – 31 jul</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">🧱 Lego Spike &nbsp;|&nbsp; 📸 Creación de Contenido</td></tr>
+          <tr><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale);font-weight:700">Sesión 4</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">3 ago – 14 ago</td><td style="padding:.85rem 1.2rem;border-bottom:1px solid var(--purple-pale)">🎮 Roblox Studio &nbsp;|&nbsp; 🤖 Robotics</td></tr>
+          <tr><td style="padding:.85rem 1.2rem;font-weight:700;color:#92400E">Sesión 5 ⭐</td><td style="padding:.85rem 1.2rem">17 ago – 28 ago</td><td style="padding:.85rem 1.2rem;color:#92400E">Cursos con mayor demanda (por confirmar)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CURSOS ══════════════ -->
+<div id="cursos" class="section">
+  <div class="section-header">
+    <h2>📚 Cursos disponibles</h2>
+    <p>Haz clic en cualquier curso para ver sus fechas y detalles completos.</p>
+  </div>
+  <div class="grid-3">
+
+    <div class="card" onclick="openModal('roblox')">
+      <span class="course-icon">🎮</span>
+      <div class="course-title">Roblox Studio</div>
+      <div class="course-age">8 – 12 años</div>
+      <p class="course-desc">Aprenden a crear sus propios videojuegos dentro de Roblox, desde cero hasta publicarlos.</p>
+      <div class="session-tags">
+        <span class="session-tag">Sesión 1 — Jun 22</span>
+        <span class="session-tag">Sesión 4 — Ago 3</span>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('robotics')">
+      <span class="course-icon">🤖</span>
+      <div class="course-title">Robotics</div>
+      <div class="course-age">10 – 15 años</div>
+      <p class="course-desc">Robótica avanzada con ESP32, electrónica real y un carro robot controlado por WiFi.</p>
+      <div class="session-tags">
+        <span class="session-tag">Sesión 1 — Jun 22</span>
+        <span class="session-tag">Sesión 4 — Ago 3</span>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('webgames')">
+      <span class="course-icon">🌐</span>
+      <div class="course-title">Videojuegos Web</div>
+      <div class="course-age">10 – 15 años</div>
+      <p class="course-desc">Programación web + mini videojuegos con HTML, CSS y JavaScript desde cero.</p>
+      <div class="session-tags">
+        <span class="session-tag">Sesión 2 — Jul 6</span>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('lego')">
+      <span class="course-icon">🧱</span>
+      <div class="course-title">Lego Spike</div>
+      <div class="course-age">7 – 12 años</div>
+      <p class="course-desc">Robótica con LEGO y programación visual. Ideal para que los más pequeños descubran la tecnología.</p>
+      <div class="session-tags">
+        <span class="session-tag">Sesión 2 — Jul 6</span>
+        <span class="session-tag">Sesión 3 — Jul 20</span>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('content')">
+      <span class="course-icon">📸</span>
+      <div class="course-title">Creación de Contenido</div>
+      <div class="course-age">10 – 16 años</div>
+      <p class="course-desc">Fotografía, video, YouTube, Instagram y edición. Crean su primer contenido digital profesional.</p>
+      <div class="session-tags">
+        <span class="session-tag">Sesión 3 — Jul 20</span>
+      </div>
+    </div>
+
+    <div class="card" style="border:2px dashed #FCD34D;background:#FFFBEB;cursor:default">
+      <span class="course-icon">⭐</span>
+      <div class="course-title" style="color:#92400E">Sesión 5 — Por confirmar</div>
+      <div class="course-age" style="background:#FEF3C7;color:#92400E">17 ago – 28 ago</div>
+      <p class="course-desc" style="color:#78350F">Se abrirán los cursos con mayor demanda de las primeras sesiones. ¡Excelente argumento de urgencia!</p>
+      <div class="session-tags">
+        <span class="session-tag s5">Disponibilidad limitada</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Demo Day card -->
+  <div style="margin-top:1.5rem;background:linear-gradient(135deg,var(--purple-dark),var(--purple-main));border-radius:20px;padding:2rem;color:var(--white)">
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <div style="font-size:3rem">🏆</div>
+      <div>
+        <div style="font-size:1.3rem;font-weight:800">Demo Day — Al final de cada sesión</div>
+        <div style="opacity:.85;margin-top:.4rem;line-height:1.6">Los papás asisten a ver los proyectos terminados de sus hijos. Es el momento donde los niños presentan su videojuego, robot o contenido. <strong>Los papás ven resultados reales.</strong> Es uno de los argumentos más poderosos al vender.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PRECIOS ══════════════ -->
+<div id="precios" class="section">
+
+  <div class="price-hero">
+    <h2>💰 Calculadora de Precios</h2>
+    <p>Desliza el número de cursos para ver el precio y descuento automático</p>
+
+    <div class="stepper">
+      <button onclick="changeQty(-1)">−</button>
+      <div>
+        <div class="stepper-count" id="qty-display">1</div>
+        <div class="stepper-label">curso(s)</div>
+      </div>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <div class="price-display">
+      <div class="price-unit">Precio por curso</div>
+      <div class="price-big" id="price-unit">$5,100</div>
+      <div class="price-total" id="price-total">Total: $5,100</div>
+      <div class="price-savings" id="price-savings">Ahorro: $1,700 (25%)</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>Tabla de descuentos</h2>
+    <p>Precio de lista: <span style="text-decoration:line-through;color:#9CA3AF">$6,800 por curso</span></p>
+  </div>
+
+  <div class="discount-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Cursos</th>
+          <th>Descuento</th>
+          <th>Precio / curso</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="discount-tbody">
+        <tr data-qty="1" class="active-row">
+          <td>1 curso</td>
+          <td><span class="pill-discount">25%</span></td>
+          <td><strong>$5,100</strong></td>
+          <td>$5,100</td>
+        </tr>
+        <tr data-qty="2">
+          <td>2 cursos</td>
+          <td><span class="pill-discount">35%</span></td>
+          <td><strong>$4,420</strong></td>
+          <td>$8,840</td>
+        </tr>
+        <tr data-qty="3">
+          <td>3 cursos</td>
+          <td><span class="pill-discount">40%</span></td>
+          <td><strong>$4,080</strong></td>
+          <td>$12,240</td>
+        </tr>
+        <tr data-qty="4">
+          <td>4 cursos</td>
+          <td><span class="pill-discount hot">45%</span></td>
+          <td><strong>$3,740</strong></td>
+          <td>$14,960</td>
+        </tr>
+        <tr data-qty="5">
+          <td>5 cursos 🏆</td>
+          <td><span class="pill-discount hot">50%</span></td>
+          <td><strong>$3,400</strong></td>
+          <td>$17,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:1.5rem;background:var(--white);border-radius:16px;padding:1.5rem;border:1px solid rgba(196,181,253,.3)">
+    <h3 style="color:var(--purple-dark);font-size:1rem;margin-bottom:.75rem">💡 Tip de venta — el descuento es el ancla</h3>
+    <p style="font-size:.9rem;color:#4B5563;line-height:1.6">El precio de salida de <strong>$6,800</strong> existe únicamente para que el cliente perciba el descuento como algo real y valioso. Siempre menciona primero el precio original antes de revelar el precio con descuento. Si ya van a comprar un curso, ofrece el paquete de 2 — la diferencia de precio es pequeña pero el descuento sube de 25% a 35%.</p>
+  </div>
+</div>
+
+<!-- ══════════════ CIERRES ══════════════ -->
+<div id="cierres" class="section">
+  <div class="section-header">
+    <h2>🔥 Frases de Cierre Poderoso</h2>
+    <p>Haz clic en cada frase para expandirla. Usa el botón de copiar para pegarla directo en WhatsApp.</p>
+  </div>
+
+  <div class="phrase-card" onclick="togglePhrase(this)">
+    <div class="phrase-header">
+      <div class="phrase-title"><span>1️⃣</span> Transformación emocional</div>
+      <span class="phrase-arrow">▾</span>
+    </div>
+    <div class="phrase-body">
+      <div class="phrase-quote">"La verdad es que hoy los niños ya viven rodeados de tecnología… aquí la diferencia es que él no solo la consumiría, aprendería a crear con ella 💡"</div>
+      <button class="copy-btn" onclick="copyText(this, 'La verdad es que hoy los niños ya viven rodeados de tecnología… aquí la diferencia es que él no solo la consumiría, aprendería a crear con ella 💡')">Copiar frase</button>
+    </div>
+  </div>
+
+  <div class="phrase-card" onclick="togglePhrase(this)">
+    <div class="phrase-header">
+      <div class="phrase-title"><span>2️⃣</span> Visualización del futuro</div>
+      <span class="phrase-arrow">▾</span>
+    </div>
+    <div class="phrase-body">
+      <div class="phrase-quote">"Imagínate la seguridad y emoción que siente un niño cuando les enseña a sus papás un videojuego o robot hecho por él mismo 🚀"</div>
+      <button class="copy-btn" onclick="copyText(this, 'Imagínate la seguridad y emoción que siente un niño cuando les enseña a sus papás un videojuego o robot hecho por él mismo 🚀')">Copiar frase</button>
+    </div>
+  </div>
+
+  <div class="phrase-card" onclick="togglePhrase(this)">
+    <div class="phrase-header">
+      <div class="phrase-title"><span>3️⃣</span> Escasez + tranquilidad</div>
+      <span class="phrase-arrow">▾</span>
+    </div>
+    <div class="phrase-body">
+      <div class="phrase-quote">"Por eso manejamos grupos pequeños de máximo 12 alumnos, para que realmente tengan acompañamiento y no se pierdan entre muchos niños."</div>
+      <button class="copy-btn" onclick="copyText(this, 'Por eso manejamos grupos pequeños de máximo 12 alumnos, para que realmente tengan acompañamiento y no se pierdan entre muchos niños.')">Copiar frase</button>
+    </div>
+  </div>
+
+  <div class="phrase-card" onclick="togglePhrase(this)">
+    <div class="phrase-header">
+      <div class="phrase-title"><span>4️⃣</span> Inversión vs gasto</div>
+      <span class="phrase-arrow">▾</span>
+    </div>
+    <div class="phrase-body">
+      <div class="phrase-quote">"Al final no es solo un curso… es desarrollar lógica, creatividad y confianza en algo que ya será parte de su futuro."</div>
+      <button class="copy-btn" onclick="copyText(this, 'Al final no es solo un curso… es desarrollar lógica, creatividad y confianza en algo que ya será parte de su futuro.')">Copiar frase</button>
+    </div>
+  </div>
+
+  <div class="phrase-card" onclick="togglePhrase(this)">
+    <div class="phrase-header">
+      <div class="phrase-title"><span>5️⃣</span> Cierre directo suave</div>
+      <span class="phrase-arrow">▾</span>
+    </div>
+    <div class="phrase-body">
+      <div class="phrase-quote">"Yo sinceramente creo que le encantaría 😊 ¿Te aparto un lugar en la sesión que mejor les acomode?"</div>
+      <button class="copy-btn" onclick="copyText(this, 'Yo sinceramente creo que le encantaría 😊 ¿Te aparto un lugar en la sesión que mejor les acomode?')">Copiar frase</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ GATILLOS ══════════════ -->
+<div id="gatillos" class="section">
+  <div class="section-header">
+    <h2>🧠 Gatillos Mentales de Venta</h2>
+    <p>Úsalos en cualquier momento de la conversación para activar la decisión de compra.</p>
+  </div>
+  <div class="trigger-grid">
+
+    <div class="trigger-card">
+      <div class="trigger-check">🔄</div>
+      <div>
+        <div class="trigger-title">Transformación</div>
+        <div class="trigger-text">"Pasar de jugar videojuegos… a crearlos."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">🏅</div>
+      <div>
+        <div class="trigger-title">Resultado tangible</div>
+        <div class="trigger-text">Publica su videojuego · Se lleva un robot a casa · Presenta proyectos reales · Crea contenido propio.</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">⏳</div>
+      <div>
+        <div class="trigger-title">Escasez</div>
+        <div class="trigger-text">"Solo 12 lugares por grupo." — Menciona que los grupos se llenan rápido.</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">🔭</div>
+      <div>
+        <div class="trigger-title">Futuro / preparación</div>
+        <div class="trigger-text">"Son habilidades que le van a servir toda la vida."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">❤️</div>
+      <div>
+        <div class="trigger-title">Orgullo de papás</div>
+        <div class="trigger-text">"Los papás ven resultados reales en el Demo Day."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">🛡️</div>
+      <div>
+        <div class="trigger-title">Seguridad</div>
+        <div class="trigger-text">"Ambiente supervisado, educativo y acompañado."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">🎉</div>
+      <div>
+        <div class="trigger-title">Diversión educativa</div>
+        <div class="trigger-text">"Aprenden sin sentir que están en una clase tradicional."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">⭐</div>
+      <div>
+        <div class="trigger-title">Identidad del niño</div>
+        <div class="trigger-text">"Muchos niños descubren aquí algo en lo que realmente son buenos."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">👥</div>
+      <div>
+        <div class="trigger-title">Comunidad</div>
+        <div class="trigger-text">"Conviven con niños que tienen intereses similares."</div>
+      </div>
+    </div>
+
+    <div class="trigger-card">
+      <div class="trigger-check">☀️</div>
+      <div>
+        <div class="trigger-title">Tiempo productivo</div>
+        <div class="trigger-text">"Especialmente en verano, ayuda muchísimo a que usen su tiempo en algo que sí les aporta."</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ GUÍA RÁPIDA ══════════════ -->
+<div id="referencia" class="section">
+  <div class="section-header">
+    <h2>⚡ Guía Rápida de Ventas</h2>
+    <p>Todo lo esencial de un vistazo.</p>
+  </div>
+  <div class="quick-grid">
+
+    <div class="quick-card">
+      <h3>🎯 Cursos</h3>
+      <ul>
+        <li><span class="dot"></span>🎮 Roblox Studio (8–12 años)</li>
+        <li><span class="dot"></span>🤖 Robotics (10–15 años)</li>
+        <li><span class="dot"></span>🌐 Videojuegos Web (10–15 años)</li>
+        <li><span class="dot"></span>🧱 Lego Spike (7–12 años)</li>
+        <li><span class="dot"></span>📸 Creación de Contenido (10–16 años)</li>
+      </ul>
+    </div>
+
+    <div class="quick-card">
+      <h3>💰 Precios clave</h3>
+      <ul>
+        <li><span class="dot"></span>Lista: <s style="color:#9CA3AF">$6,800</s></li>
+        <li><span class="dot"></span>1 curso → $5,100 (25% off)</li>
+        <li><span class="dot"></span>2 cursos → $4,420 c/u (35% off)</li>
+        <li><span class="dot"></span>3 cursos → $4,080 c/u (40% off)</li>
+        <li><span class="dot"></span>5 cursos → $3,400 c/u (50% off)</li>
+      </ul>
+    </div>
+
+    <div class="quick-card">
+      <h3>📅 Sesiones</h3>
+      <ul>
+        <li><span class="dot"></span>S1: 22 jun – 3 jul</li>
+        <li><span class="dot"></span>S2: 6 jul – 17 jul</li>
+        <li><span class="dot"></span>S3: 20 jul – 31 jul</li>
+        <li><span class="dot"></span>S4: 3 ago – 14 ago</li>
+        <li><span class="dot"></span>S5: 17 ago – 28 ago ⭐</li>
+      </ul>
+    </div>
+
+    <div class="quick-card">
+      <h3>🔑 Datos clave</h3>
+      <ul>
+        <li><span class="dot"></span>Máx. 12 alumnos por grupo</li>
+        <li><span class="dot"></span>Demo Day al final de cada sesión</li>
+        <li><span class="dot"></span>Proyectos reales para llevar a casa</li>
+        <li><span class="dot"></span>Ambiente seguro y supervisado</li>
+        <li><span class="dot"></span>Aprenden haciendo (no clases)</li>
+      </ul>
+    </div>
+
+    <div class="quick-card" style="grid-column: 1 / -1">
+      <h3>🚀 Flujo de cierre recomendado</h3>
+      <ul>
+        <li><span class="dot"></span><strong>1.</strong> Pregunta la edad del niño → recomienda el curso ideal</li>
+        <li><span class="dot"></span><strong>2.</strong> Menciona el precio de lista ($6,800) antes del descuento</li>
+        <li><span class="dot"></span><strong>3.</strong> Ofrece el descuento según cuántos cursos quiere</li>
+        <li><span class="dot"></span><strong>4.</strong> Usa gatillo de escasez: "solo 12 lugares por grupo"</li>
+        <li><span class="dot"></span><strong>5.</strong> Cierra con: "¿Te aparto un lugar en la sesión que mejor les acomode?"</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════ JS ══════════════ -->
+<script>
+  // TAB NAVIGATION
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+
+  // PHRASE ACCORDION
+  function togglePhrase(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.phrase-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  // COPY BUTTON
+  function copyText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar frase'; btn.classList.remove('copied'); }, 2000);
+    });
+    event.stopPropagation();
+  }
+
+  // PRICE CALCULATOR
+  const priceData = [
+    null,
+    { unit: 5100,  disc: 25, total: 5100  },
+    { unit: 4420,  disc: 35, total: 8840  },
+    { unit: 4080,  disc: 40, total: 12240 },
+    { unit: 3740,  disc: 45, total: 14960 },
+    { unit: 3400,  disc: 50, total: 17000 },
+  ];
+  let qty = 1;
+
+  function fmt(n) { return '$' + n.toLocaleString('es-MX'); }
+
+  function updatePrice() {
+    const d = priceData[qty];
+    document.getElementById('qty-display').textContent = qty;
+    document.getElementById('price-unit').textContent = fmt(d.unit);
+    document.getElementById('price-total').textContent = 'Total: ' + fmt(d.total);
+    const saved = 6800 * qty - d.total;
+    document.getElementById('price-savings').textContent = `Ahorras: ${fmt(saved)} (${d.disc}% de descuento)`;
+    document.querySelectorAll('#discount-tbody tr').forEach(tr => {
+      tr.classList.toggle('active-row', parseInt(tr.dataset.qty) === qty);
+    });
+  }
+
+  function changeQty(delta) {
+    qty = Math.min(5, Math.max(1, qty + delta));
+    updatePrice();
+  }
+
+  // MODALS
+  const modalData = {
+    roblox: {
+      icon: '🎮', title: 'Roblox Studio', age: '8 – 12 años',
+      desc: 'Aprenden a crear videojuegos dentro de Roblox usando Lua Studio. Al final publican su juego y lo pueden compartir con amigos.',
+      sessions: [
+        { num: 'Sesión 1', dates: '22 de junio – 3 de julio' },
+        { num: 'Sesión 4', dates: '3 de agosto – 14 de agosto' },
+      ]
+    },
+    robotics: {
+      icon: '🤖', title: 'Robotics', age: '10 – 15 años',
+      desc: 'Robótica avanzada con ESP32, electrónica real y programación. Los alumnos construyen y se llevan a casa un carro robot controlado por WiFi.',
+      sessions: [
+        { num: 'Sesión 1', dates: '22 de junio – 3 de julio' },
+        { num: 'Sesión 4', dates: '3 de agosto – 14 de agosto' },
+      ]
+    },
+    webgames: {
+      icon: '🌐', title: 'Videojuegos Web', age: '10 – 15 años',
+      desc: 'Programación web + mini videojuegos con HTML, CSS y JavaScript. Al terminar tienen un portafolio de juegos publicados en la web.',
+      sessions: [
+        { num: 'Sesión 2', dates: '6 de julio – 17 de julio' },
+      ]
+    },
+    lego: {
+      icon: '🧱', title: 'Lego Spike', age: '7 – 12 años',
+      desc: 'Robótica con LEGO Spike Prime y programación visual/bloques. Ideal para que los más pequeños den sus primeros pasos en tecnología de forma divertida.',
+      sessions: [
+        { num: 'Sesión 2', dates: '6 de julio – 17 de julio' },
+        { num: 'Sesión 3', dates: '20 de julio – 31 de julio' },
+      ]
+    },
+    content: {
+      icon: '📸', title: 'Creación de Contenido', age: '10 – 16 años',
+      desc: 'Fotografía, video, YouTube, Instagram y edición profesional. Al terminar presentan su canal o perfil con contenido real creado por ellos.',
+      sessions: [
+        { num: 'Sesión 3', dates: '20 de julio – 31 de julio' },
+      ]
+    }
+  };
+
+  function openModal(key) {
+    const d = modalData[key];
+    document.getElementById('modal-body').innerHTML = `
+      <div style="font-size:2.5rem;margin-bottom:.75rem">${d.icon}</div>
+      <h2>${d.title}</h2>
+      <div style="display:inline-block;background:var(--purple-pale);color:var(--purple-main);padding:.2rem .75rem;border-radius:999px;font-size:.8rem;font-weight:600;margin:.5rem 0">${d.age}</div>
+      <p style="font-size:.95rem;color:#4B5563;line-height:1.6;margin:.75rem 0">${d.desc}</p>
+      <div style="font-weight:700;color:var(--purple-dark);margin-bottom:.5rem">📅 Sesiones disponibles</div>
+      <div class="modal-sessions">
+        ${d.sessions.map(s => `
+          <div class="modal-session">
+            <div class="num">${s.num}</div>
+            <div class="dates">${s.dates}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="background:var(--purple-pale);border-radius:12px;padding:1rem;margin-top:.5rem">
+        <div style="font-size:.85rem;color:var(--purple-dark);font-weight:600">💡 Argumento de venta</div>
+        <div style="font-size:.85rem;color:#4B5563;margin-top:.25rem">Solo 12 lugares por sesión — una vez lleno, pasa a lista de espera para la siguiente.</div>
+      </div>
+    `;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+  }
+  function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  // ESC key
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>

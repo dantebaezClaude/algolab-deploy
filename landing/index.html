@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlgoLab — Laboratorio Digital de Verano</title>
+<meta name="description" content="Tu hijo entra a un laboratorio real de tecnología y sale con un proyecto propio, terminado. Roblox, Robótica, Programación Web, LEGO Spike y Creación de Contenido.">
+
+<!-- Meta Pixel Code -->
+<!-- 👉 Reemplaza TU_PIXEL_ID_AQUI por el ID del conjunto de datos que crees en Meta Events Manager (aparece en 2 lugares abajo) -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<style>
+  :root {
+    --purple-dark:   #3B0764;
+    --purple-main:   #6D28D9;
+    --purple-mid:    #8B5CF6;
+    --purple-light:  #C4B5FD;
+    --purple-pale:   #EDE9FE;
+    --white:         #FFFFFF;
+    --gray-soft:     #F5F3FF;
+    --wa-green:      #25D366;
+    --wa-green-dark: #128C4A;
+    --amber:         #FEF3C7;
+    --amber-dark:    #92400E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--gray-soft);
+    color: #1E1B4B;
+    min-height: 100vh;
+  }
+
+  a { text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--purple-dark);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    box-shadow: 0 4px 20px rgba(59,7,100,.4);
+  }
+  .nav-left { display: flex; align-items: center; overflow-x: auto; }
+  .nav-logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--white);
+    padding: 1rem 1.5rem 1rem 0;
+    border-right: 1px solid rgba(255,255,255,.15);
+    margin-right: 1rem;
+    letter-spacing: -.5px;
+    white-space: nowrap;
+  }
+  .nav-logo span { color: var(--purple-light); }
+  nav .nav-link {
+    color: rgba(255,255,255,.7);
+    padding: .75rem 1rem;
+    font-size: .85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color .2s;
+  }
+  nav .nav-link:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--wa-green);
+    color: var(--white) !important;
+    padding: .55rem 1.1rem;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-left: .5rem;
+    flex-shrink: 0;
+  }
+  .nav-cta:hover { background: var(--wa-green-dark); }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-main) 60%, var(--purple-mid) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 3.5rem 1.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner { max-width: 800px; margin: 0 auto; position: relative; }
+  .eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    padding: .35rem 1rem;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+    backdrop-filter: blur(6px);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
+  .hero p.sub { font-size: 1.1rem; opacity: .9; margin-top: 1rem; line-height: 1.6; }
+  .hero-badges { display: flex; gap: .6rem; justify-content: center; margin-top: 1.75rem; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    color: var(--white);
+    padding: .4rem .9rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+    white-space: nowrap;
+  }
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--wa-green);
+    color: var(--white);
+    padding: .95rem 1.75rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    transition: transform .15s, background .2s;
+  }
+  .btn-wa:hover { background: var(--wa-green-dark); transform: translateY(-2px); }
+
+  /* ── SECTION HEADER ── */
+  .section-header { text-align: center; max-width: 640px; margin: 0 auto 2.2rem; }
+  .section-header .eyebrow-dark {
+    color: var(--purple-main); font-weight: 700; font-size: .82rem;
+    text-transform: uppercase; letter-spacing: .6px;
+  }
+  .section-header h2 { font-size: 1.9rem; font-weight: 800; color: var(--purple-dark); margin-top: .4rem; }
+  .section-header p { color: #6B7280; margin-top: .6rem; font-size: 1rem; line-height: 1.6; }
+
+  /* ── FLYER GRID (labs) ── */
+  .flyer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; }
+  .flyer-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 1.5rem 1.1rem;
+    text-align: center;
+    border: 1px solid rgba(196,181,253,.35);
+    box-shadow: 0 4px 16px rgba(109,40,217,.08);
+  }
+  .flyer-icon { font-size: 2.6rem; display: block; margin-bottom: .6rem; }
+  .flyer-title { font-weight: 700; color: var(--purple-dark); font-size: .95rem; margin-bottom: .35rem; }
+  .flyer-desc { font-size: .82rem; color: #6B7280; line-height: 1.5; }
+
+  /* ── TRUST STATS ── */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;
+    background: var(--white); border-radius: 18px; padding: 1.75rem;
+    border: 1px solid rgba(196,181,253,.35); box-shadow: 0 4px 16px rgba(109,40,217,.08);
+  }
+  .stat { text-align: center; }
+  .stat .num { font-size: 1.9rem; font-weight: 800; color: var(--purple-main); }
+  .stat .lbl { font-size: .82rem; color: #6B7280; margin-top: .2rem; }
+
+  /* ── INSTAGRAM ── */
+  .ig-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
+  .ig-embed-wrap {
+    width: 100%; max-width: 340px; height: 640px;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 16px rgba(109,40,217,.1);
+    border: 1px solid rgba(196,181,253,.35);
+    background: var(--white);
+  }
+  .ig-embed-wrap iframe { width: 100%; height: 100%; border: 0; }
+  .ig-placeholder {
+    width: 100%;
+    background: var(--white);
+    border: 2px dashed var(--purple-light);
+    border-radius: 18px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: #4B5563;
+  }
+  .ig-placeholder p { margin-top: .4rem; font-size: .92rem; }
+  .btn-ig {
+    display: inline-block; margin-top: 1rem;
+    background: var(--purple-pale); color: var(--purple-main);
+    padding: .6rem 1.3rem; border-radius: 999px; font-weight: 700; font-size: .88rem;
+  }
+  .btn-ig:hover { background: var(--purple-light); color: var(--white); }
+
+  /* ── VALUE BLOCKS ── */
+  .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+  .value-card {
+    background: var(--white); border-radius: 18px; padding: 1.6rem;
+    border: 1px solid rgba(196,181,253,.35); box-shadow: 0 4px 16px rgba(109,40,217,.08);
+  }
+  .value-num {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--purple-pale); color: var(--purple-main);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: .95rem; margin-bottom: .8rem;
+  }
+  .value-title { font-weight: 700; color: var(--purple-dark); font-size: 1.02rem; margin-bottom: .4rem; }
+  .value-text { font-size: .9rem; color: #4B5563; line-height: 1.6; }
+
+  /* ── PRICING ── */
+  .price-anchor { text-align: center; margin-bottom: 2rem; }
+  .price-anchor .old { font-size: 1.2rem; color: #9CA3AF; text-decoration: line-through; }
+  .price-anchor .now { font-size: .95rem; color: var(--purple-main); font-weight: 700; margin-top: .3rem; }
+
+  .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 800px; margin: 0 auto; }
+  .price-card {
+    background: var(--white); border-radius: 22px; padding: 2rem 1.75rem;
+    border: 2px solid rgba(196,181,253,.4); box-shadow: 0 4px 20px rgba(109,40,217,.1);
+    position: relative; text-align: center;
+  }
+  .price-card.featured {
+    border-color: var(--wa-green);
+    background: linear-gradient(180deg, #F0FDF6 0%, var(--white) 40%);
+  }
+  .ribbon {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--wa-green); color: var(--white);
+    padding: .3rem 1.1rem; border-radius: 999px; font-size: .78rem; font-weight: 800;
+    white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  }
+  .price-card-label { font-weight: 700; color: var(--purple-dark); font-size: 1.05rem; margin-top: .5rem; }
+  .price-card-amount { font-size: 2.6rem; font-weight: 900; color: var(--purple-dark); margin-top: .6rem; letter-spacing: -1px; }
+  .price-card-amount span { font-size: 1rem; font-weight: 600; color: #6B7280; }
+  .price-card-note { font-size: .85rem; color: #6B7280; margin-top: .3rem; }
+  .price-card-save {
+    display: inline-block; margin-top: .8rem;
+    background: var(--amber); color: var(--amber-dark);
+    padding: .3rem .9rem; border-radius: 999px; font-size: .8rem; font-weight: 700;
+  }
+
+  .scarcity-pill {
+    display: block; max-width: 460px; margin: 1.75rem auto 0;
+    background: var(--purple-pale); color: var(--purple-dark);
+    padding: .75rem 1.2rem; border-radius: 14px;
+    font-size: .9rem; font-weight: 600; text-align: center;
+    border: 1px solid rgba(196,181,253,.5);
+  }
+  .price-note {
+    text-align: center; max-width: 560px; margin: 1.25rem auto 0;
+    font-size: .88rem; color: #6B7280; line-height: 1.6;
+  }
+  .price-cta-wrap { text-align: center; margin-top: 2rem; }
+
+  /* ── GUARANTEE ── */
+  .guarantee {
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple-main));
+    border-radius: 22px; padding: 2.5rem; color: var(--white); text-align: center;
+  }
+  .guarantee .icon { font-size: 2.6rem; margin-bottom: .75rem; }
+  .guarantee h3 { font-size: 1.4rem; font-weight: 800; }
+  .guarantee p { opacity: .9; margin-top: .6rem; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+  /* ── FAQ ACCORDION ── */
+  .faq-card {
+    background: var(--white); border-radius: 16px;
+    border: 1px solid rgba(196,181,253,.35); overflow: hidden;
+    margin-bottom: .8rem; box-shadow: 0 2px 8px rgba(109,40,217,.06);
+  }
+  .faq-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.4rem; cursor: pointer; user-select: none;
+  }
+  .faq-header:hover { background: var(--gray-soft); }
+  .faq-title { font-weight: 700; color: var(--purple-dark); font-size: .98rem; }
+  .faq-arrow { color: var(--purple-mid); transition: transform .2s; flex-shrink: 0; margin-left: 1rem; }
+  .faq-card.open .faq-arrow { transform: rotate(180deg); }
+  .faq-body { display: none; padding: 0 1.4rem 1.3rem; font-size: .9rem; color: #4B5563; line-height: 1.65; }
+  .faq-card.open .faq-body { display: block; }
+
+  /* ── FINAL CTA ── */
+  .final-cta {
+    background: var(--purple-dark); color: var(--white); text-align: center;
+    border-radius: 22px; padding: 2.75rem 1.5rem;
+  }
+  .final-cta h2 { font-size: 1.7rem; font-weight: 800; }
+  .final-cta p { opacity: .85; margin-top: .6rem; }
+
+  footer { text-align: center; padding: 2rem 1.5rem; color: #9CA3AF; font-size: .82rem; }
+
+  /* ── FLOATING WHATSAPP BUTTON ── */
+  .float-wa {
+    position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 400;
+    display: flex; align-items: center; gap: .5rem;
+    background: var(--wa-green); color: var(--white);
+    padding: .8rem 1.1rem; border-radius: 999px;
+    font-weight: 700; font-size: .9rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.28);
+    transition: transform .15s;
+  }
+  .float-wa:hover { transform: translateY(-2px); background: var(--wa-green-dark); }
+  .float-wa .dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  /* ── OFFER POPUP (estilo cupón) ── */
+  .popup-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(59,7,100,.6); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .popup-overlay.open { display: flex; }
+  .popup-card {
+    background: var(--white); border-radius: 24px; max-width: 380px; width: 100%;
+    padding: 1.9rem 1.75rem 1.6rem; position: relative; text-align: center;
+    overflow: visible;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 25px 70px rgba(0,0,0,.35);
+  }
+  @keyframes popIn {
+    0%   { transform: scale(.75) rotate(-4deg); opacity: 0; }
+    65%  { transform: scale(1.04) rotate(1.5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .popup-close {
+    position: absolute; top: -.6rem; right: -.6rem;
+    background: var(--white); border: none; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer; font-size: .95rem;
+    color: var(--purple-main); font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .popup-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    background: var(--amber); color: var(--amber-dark);
+    padding: .35rem 1rem; border-radius: 999px; font-size: .78rem; font-weight: 800; margin-bottom: 1rem;
+    animation: wiggle 2.4s ease-in-out infinite;
+  }
+  @keyframes wiggle { 0%,100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  .popup-sparkle { display: inline-block; animation: sparkle 1.6s ease-in-out infinite; }
+  @keyframes sparkle { 0%,100% { transform: scale(1) rotate(0); opacity: 1; } 50% { transform: scale(1.3) rotate(15deg); opacity: .7; } }
+
+  .coupon-old { font-size: 1rem; color: #B0A5D6; text-decoration: line-through; font-weight: 600; }
+  .coupon-amount {
+    display: block; font-size: 3rem; font-weight: 900; color: var(--purple-dark);
+    letter-spacing: -1.5px; line-height: 1.05; margin-top: .1rem;
+  }
+  .coupon-amount .unit { font-size: 1rem; font-weight: 700; color: #6B7280; }
+  .coupon-sub { font-size: .85rem; color: #6B7280; margin-top: .4rem; }
+
+  .popup-divider {
+    position: relative; border-top: 2px dashed var(--purple-light);
+    margin: 1.4rem -1.75rem;
+  }
+  .popup-divider::before, .popup-divider::after {
+    content: ''; position: absolute; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(59,7,100,.6);
+  }
+  .popup-divider::before { left: -13px; }
+  .popup-divider::after { right: -13px; }
+
+  .coupon-slots {
+    background: var(--purple-pale); color: var(--purple-dark);
+    font-size: .82rem; font-weight: 700; padding: .55rem .9rem;
+    border-radius: 12px; margin-bottom: 1.2rem;
+  }
+  .popup-card .btn-wa {
+    margin-top: 0; width: 100%; justify-content: center;
+    animation: ctaPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes ctaPulse {
+    0%,100% { box-shadow: 0 8px 22px rgba(37,211,102,.4); }
+    50%     { box-shadow: 0 10px 32px rgba(37,211,102,.75); }
+  }
+  .popup-later { display: block; margin-top: 1rem; font-size: .8rem; color: #B5B5C3; }
+  .coupon-barcode {
+    height: 26px; margin-top: 1.2rem; border-radius: 3px; opacity: .3;
+    background: repeating-linear-gradient(90deg,
+      var(--purple-dark) 0 2px, transparent 2px 5px,
+      var(--purple-dark) 5px 6px, transparent 6px 10px,
+      var(--purple-dark) 10px 13px, transparent 13px 16px,
+      var(--purple-dark) 16px 17px, transparent 17px 21px);
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.85rem; }
+    .wrap { padding: 2.25rem 1.1rem; }
+    nav { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo">Algo<span>Lab</span></div>
+    <a class="nav-link" href="#hero">Inicio</a>
+    <a class="nav-link" href="#flyer">Laboratorio</a>
+    <a class="nav-link" href="#precios">Precios</a>
+    <a class="nav-link" href="#faq">Preguntas</a>
+  </div>
+  <a class="nav-cta" id="nav-wa-btn" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">🚀 Laboratorio Digital de Verano</span>
+    <h1>De jugar videojuegos a crearlos.<br>De ver tecnología a programarla.</h1>
+    <p class="sub">Tu hijo entra a un laboratorio real de tecnología — Roblox, Robótica, Programación Web, LEGO Spike y Creación de Contenido — y sale con un proyecto propio, terminado, en sus manos.</p>
+    <div class="hero-badges">
+      <span class="badge">🏅 Escuela certificada internacionalmente</span>
+      <span class="badge">📍 +3 años en Nuevo León</span>
+      <span class="badge">🎓 +150 alumnos graduados</span>
+      <span class="badge">🏆 Compite en torneos LEGO</span>
+    </div>
+    <a class="btn-wa hero-wa-btn" href="#" target="_blank" rel="noopener">💬 Quiero más información</a>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <!-- ══════════════ FLYER / LABORATORIO ══════════════ -->
+  <section id="flyer" style="margin-bottom:3.5rem">
+    <div class="section-header">
+      <div class="eyebrow-dark">El laboratorio</div>
+      <h2>Esto es lo que tu hijo va a estar haciendo</h2>
+      <p>Cinco laboratorios, un mismo lugar. Elige el que más le llame — o pruébalos.</p>
+    </div>
+    <div class="flyer-grid">
+      <div class="flyer-card">
+        <span class="flyer-icon">🎮</span>
+        <div class="flyer-title">Roblox Studio</div>
+        <div class="flyer-desc">Construyendo su propio videojuego, listo para publicar.</div>
+      </div>
+      <div class="flyer-card">
+        <span class="flyer-icon">🤖</span>
+        <div class="flyer-title">Robotics</div>
+        <div class="flyer-desc">Programando y armando su robot con ESP32.</div>
+      </div>
+      <div class="flyer-card">
+        <span class="flyer-icon">🌐</span>
+        <div class="flyer-title">Videojuegos Web</div>
+        <div class="flyer-desc">Publicando su primera página y mini-juego en la web.</div>
+      </div>
+      <div class="flyer-card">
+        <span class="flyer-icon">🧱</span>
+        <div class="flyer-title">LEGO Spike</div>
+        <div class="flyer-desc">Programando robots con LEGO, listo para competir.</div>
+      </div>
+      <div class="flyer-card">
+        <span class="flyer-icon">📸</span>
+        <div class="flyer-title">Creación de Contenido</div>
+        <div class="flyer-desc">Grabando y editando su primer contenido digital.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ INSTAGRAM ══════════════ -->
+  <section id="instagram" style="margin-bottom:3.5rem">
+    <div class="section-header">
+      <div class="eyebrow-dark">Míralos en acción</div>
+      <h2>Así se ve un día en el laboratorio</h2>
+      <p>Los proyectos, las caras, los resultados — tal cual pasan, en nuestro Instagram.</p>
+    </div>
+    <div class="ig-grid" id="ig-grid"></div>
+    <div style="text-align:center;margin-top:1.75rem">
+      <a class="btn-ig" id="ig-discover-btn" href="#" target="_blank" rel="noopener">🔎 Descubrir lo que otros alumnos ya están haciendo</a>
+    </div>
+  </section>
+
+  <!-- ══════════════ POR QUÉ AL MENOS 1 SEMANA ══════════════ -->
+  <section id="valor" style="margin-bottom:3.5rem">
+    <div class="section-header">
+      <div class="eyebrow-dark">Por qué</div>
+      <h2>Por qué llevarlo al menos una semana</h2>
+    </div>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-num">1</div>
+        <div class="value-title">Resultado real, no una promesa</div>
+        <div class="value-text">Se va con algo que él mismo construyó: su videojuego, su robot, su página, su contenido. No es una hoja de trabajo — es un proyecto que puede enseñar.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">2</div>
+        <div class="value-title">Sin experiencia previa</div>
+        <div class="value-text">9 de cada 10 niños que reciben empiezan desde cero. El laboratorio está diseñado para eso, no para expertos.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">3</div>
+        <div class="value-title">Resultados desde el día 1</div>
+        <div class="value-text">No hay "semana de teoría". Desde el primer día ya está creando dentro del laboratorio.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">4</div>
+        <div class="value-title">Tú no organizas nada</div>
+        <div class="value-text">Nosotros ponemos el instructor, el material y el plan. Tú solo lo traes.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ PRECIOS ══════════════ -->
+  <section id="precios" style="margin-bottom:3.5rem">
+    <div class="section-header">
+      <div class="eyebrow-dark">🎟️ Precio de temporada</div>
+      <h2>Así se está abriendo el verano este año</h2>
+      <p>Acceso general al laboratorio: tu hijo vive Roblox, Robótica, Programación Web, LEGO Spike o Creación de Contenido durante su semana.</p>
+    </div>
+
+    <div class="price-anchor">
+      <div class="old">Antes $2,600 por semana</div>
+    </div>
+
+    <div class="price-grid" style="max-width:380px">
+      <div class="price-card featured">
+        <span class="ribbon">PRECIO DE TEMPORADA</span>
+        <div class="price-card-label">1 Semana en el laboratorio</div>
+        <div class="price-card-amount">$1,450</div>
+        <div class="price-card-note">Por semana</div>
+        <div class="price-card-save">Ahorras $1,150</div>
+      </div>
+    </div>
+
+    <span class="scarcity-pill">🎟️ Solo 5 cupones con este precio, por semana.</span>
+
+    <div class="price-cta-wrap">
+      <a class="btn-wa" id="price-wa-btn" href="#" target="_blank" rel="noopener">💬 Apartar mi cupón por WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- ══════════════ GARANTÍA + STATS ══════════════ -->
+  <section style="margin-bottom:3.5rem">
+    <div class="guarantee" style="margin-bottom:1.5rem">
+      <div class="icon">🤝</div>
+      <h3>Nuestro compromiso</h3>
+      <p>Tu hijo se va con un proyecto propio, terminado — o seguimos trabajando con él hasta lograrlo. Así de simple.</p>
+    </div>
+    <div class="stats-strip">
+      <div class="stat"><div class="num">3+</div><div class="lbl">años en Nuevo León</div></div>
+      <div class="stat"><div class="num">150+</div><div class="lbl">alumnos graduados</div></div>
+      <div class="stat"><div class="num">12</div><div class="lbl">alumnos máx. por grupo</div></div>
+      <div class="stat"><div class="num">🏆</div><div class="lbl">torneos LEGO</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FAQ / OBJECIONES ══════════════ -->
+  <section id="faq" style="margin-bottom:3.5rem">
+    <div class="section-header">
+      <div class="eyebrow-dark">Preguntas</div>
+      <h2>Antes de que preguntes</h2>
+    </div>
+
+    <div class="faq-card" onclick="toggleFaq(this)">
+      <div class="faq-header">
+        <div class="faq-title">¿No es caro?</div>
+        <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-body">No es el precio de "un curso" — es el precio de una semana de verano bien invertida. Compáralo contra una semana de pantalla sin rumbo.</div>
+    </div>
+
+    <div class="faq-card" onclick="toggleFaq(this)">
+      <div class="faq-header">
+        <div class="faq-title">¿Realmente vale la pena?</div>
+        <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-body">La pregunta no es si vale la pena el laboratorio — es qué va a hacer tu hijo esta semana si no es esto.</div>
+    </div>
+
+    <div class="faq-card" onclick="toggleFaq(this)">
+      <div class="faq-header">
+        <div class="faq-title">¿Le va a gustar?</div>
+        <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-body">Empezamos con lo que ya le encanta —Roblox, videojuegos, contenido— y lo convertimos en algo que construye, no que solo consume.</div>
+    </div>
+
+    <div class="faq-card" onclick="toggleFaq(this)">
+      <div class="faq-header">
+        <div class="faq-title">¿Es un ambiente seguro y supervisado?</div>
+        <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-body">Grupos reducidos, instructor dedicado, ambiente controlado. Tú lo dejas, nosotros respondemos por él.</div>
+    </div>
+
+    <div class="faq-card" onclick="toggleFaq(this)">
+      <div class="faq-header">
+        <div class="faq-title">¿De verdad aprende algo real?</div>
+        <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-body">Se va con un proyecto terminado y visible el mismo día — no con una promesa, con evidencia.</div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FINAL CTA ══════════════ -->
+  <section class="final-cta">
+    <h2>Quedan pocos cupones con este precio de temporada</h2>
+    <p>Escríbenos y te decimos si aún hay lugar disponible para esta semana.</p>
+    <a class="btn-wa" id="final-wa-btn" href="#" target="_blank" rel="noopener">💬 Más info por WhatsApp</a>
+  </section>
+
+</div>
+
+<footer>AlgoLab — Laboratorio Digital de Verano · Nuevo León</footer>
+
+<!-- ══════════════ WHATSAPP FLOTANTE ══════════════ -->
+<a class="float-wa" id="float-wa-btn" href="#" target="_blank" rel="noopener">
+  <span class="dot"></span> Más info
+</a>
+
+<!-- ══════════════ POPUP DE OFERTA (cupón) ══════════════ -->
+<div class="popup-overlay" id="offer-popup" onclick="closePopupOutside(event)">
+  <div class="popup-card">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+
+    <div class="popup-badge">🎟️ Oferta de temporada <span class="popup-sparkle">✨</span></div>
+    <div class="coupon-old">Antes $2,600</div>
+    <div class="coupon-amount">$1,450 <span class="unit">/ semana</span></div>
+    <div class="coupon-sub">Acceso al laboratorio · Ahorras $1,150</div>
+
+    <div class="popup-divider"></div>
+
+    <div class="coupon-slots">🎟️ Solo 5 cupones con este precio, por semana</div>
+    <a class="btn-wa" id="popup-wa-btn" href="#" target="_blank" rel="noopener">💬 Más info</a>
+    <a class="popup-later" onclick="closePopup()" href="javascript:void(0)">Seguir viendo</a>
+    <div class="coupon-barcode"></div>
+  </div>
+</div>
+
+<script>
+  // ══════════════ CONFIGURACIÓN — edita aquí ══════════════
+
+  // Número de WhatsApp (con código de país) y mensaje predefinido
+  const WHATSAPP_NUMBER = '5218123895657';
+  const WHATSAPP_MESSAGE = 'Quiero aprovechar mi cupón de $1,450 por 1 semana';
+
+  // 👉 Pega aquí los links completos de tus reels/publicaciones de Instagram
+  // Ejemplo: 'https://www.instagram.com/reel/XXXXXXXXXXX/'
+  const INSTAGRAM_REELS = [
+    'https://www.instagram.com/reel/DaET7grzxJ0/',
+    'https://www.instagram.com/reel/DZa7rhEzPsT/',
+    'https://www.instagram.com/reel/DZdMc6-TnMv/',
+  ];
+
+  // 👉 Link real de tu perfil de Instagram
+  const INSTAGRAM_PROFILE_URL = 'https://www.instagram.com/algolab.academy/';
+
+  // ══════════════ FIN DE CONFIGURACIÓN ══════════════
+
+  const waHref = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(WHATSAPP_MESSAGE);
+  document.querySelectorAll('#nav-wa-btn, .hero-wa-btn, #price-wa-btn, #final-wa-btn, #float-wa-btn, #popup-wa-btn')
+    .forEach(el => {
+      el.setAttribute('href', waHref);
+      // Evento estándar de Meta Pixel: se dispara al hacer clic en cualquier botón de WhatsApp
+      el.addEventListener('click', () => { if (window.fbq) fbq('track', 'Contact'); });
+    });
+  document.getElementById('ig-discover-btn').setAttribute('href', INSTAGRAM_PROFILE_URL);
+
+  // FAQ ACCORDION
+  function toggleFaq(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  // INSTAGRAM EMBEDS — convierte cada link en un iframe que muestra el reel/post directamente
+  function parseInstagramUrl(url) {
+    const match = url.match(/instagram\.com\/(p|reel|tv)\/([^/?]+)/);
+    return match ? { type: match[1], id: match[2] } : null;
+  }
+
+  function renderInstagram() {
+    const grid = document.getElementById('ig-grid');
+    if (INSTAGRAM_REELS.length === 0) {
+      grid.innerHTML = `<div class="ig-placeholder">
+        <div style="font-size:2.5rem">📸</div>
+        <p>Aquí van a aparecer tus reels reales de Instagram.</p>
+        <p style="font-size:.82rem;color:#9CA3AF">Pega los links en <strong>INSTAGRAM_REELS</strong> dentro del código.</p>
+        <a class="btn-ig" href="${INSTAGRAM_PROFILE_URL}" target="_blank" rel="noopener">Ver Instagram</a>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = INSTAGRAM_REELS.map(url => {
+      const parsed = parseInstagramUrl(url);
+      if (!parsed) return '';
+      const embedSrc = `https://www.instagram.com/${parsed.type}/${parsed.id}/embed`;
+      return `<div class="ig-embed-wrap"><iframe src="${embedSrc}" loading="lazy" allowtransparency="true"></iframe></div>`;
+    }).join('');
+  }
+  renderInstagram();
+
+  // POPUP DE OFERTA — aparece al cargar/refrescar y al hacer scroll hacia arriba
+  const popupEl = document.getElementById('offer-popup');
+  function openPopup() { popupEl.classList.add('open'); }
+  function closePopup() { popupEl.classList.remove('open'); }
+  function closePopupOutside(e) { if (e.target === popupEl) closePopup(); }
+
+  window.addEventListener('load', () => {
+    setTimeout(openPopup, 3500);
+  });
+
+  let lastScrollY = window.scrollY;
+  let maxScrollDown = 0;
+  let scrollUpTriggered = false;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > maxScrollDown) maxScrollDown = y;
+    const scrollingUp = y < lastScrollY - 5;
+    if (scrollingUp && maxScrollDown > 400 && !scrollUpTriggered && !popupEl.classList.contains('open')) {
+      openPopup();
+      scrollUpTriggered = true;
+    }
+    lastScrollY = y;
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+</script>
+</body>
+</html>

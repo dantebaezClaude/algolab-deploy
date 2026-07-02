@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "algolabmty.com" }],
+      "destination": "/landing"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.algolabmty.com" }],
+      "destination": "/landing"
+    }
+  ]
+}
