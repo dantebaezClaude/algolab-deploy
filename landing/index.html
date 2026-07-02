@@ -6,8 +6,7 @@
 <title>AlgoLab — Laboratorio Digital de Verano</title>
 <meta name="description" content="Tu hijo entra a un laboratorio real de tecnología y sale con un proyecto propio, terminado. Roblox, Robótica, Programación Web, LEGO Spike y Creación de Contenido.">
 
-<!-- Meta Pixel Code -->
-<!-- 👉 Reemplaza TU_PIXEL_ID_AQUI por el ID del conjunto de datos que crees en Meta Events Manager (aparece en 2 lugares abajo) -->
+<!-- Meta Pixel Code — dataset "AlgolabVerano" (2262112711227862) -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -17,11 +16,37 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'TU_PIXEL_ID_AQUI');
-fbq('track', 'PageView');
+fbq('init', '2262112711227862');
+
+function metaGetCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+// Manda el evento al píxel (navegador) Y a /api/capi (servidor) con el mismo event_id,
+// así Meta deduplica ambos y usa la señal server-side cuando el píxel se bloquea.
+window.sendMetaEvent = function(eventName) {
+  const eventId = 'evt_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+  fbq('track', eventName, {}, { eventID: eventId });
+  fetch('/api/capi', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_url: window.location.href,
+      fbp: metaGetCookie('_fbp'),
+      fbc: metaGetCookie('_fbc'),
+      user_agent: navigator.userAgent,
+    }),
+    keepalive: true,
+  }).catch(() => {});
+};
+
+window.sendMetaEvent('PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
@@ -103,10 +128,14 @@ src="https://www.facebook.com/tr?id=TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
 
   /* ── HERO ── */
   .hero {
-    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-main) 60%, var(--purple-mid) 100%);
+    background:
+      linear-gradient(160deg, rgba(59,7,100,.93) 0%, rgba(109,40,217,.82) 55%, rgba(139,92,246,.72) 100%),
+      url("assets/hero.jpg");
+    background-size: cover;
+    background-position: center 30%;
     color: var(--white);
     text-align: center;
-    padding: 3.5rem 1.5rem 3rem;
+    padding: 4rem 1.5rem 3.25rem;
     position: relative;
     overflow: hidden;
   }
@@ -675,8 +704,8 @@ src="https://www.facebook.com/tr?id=TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
   document.querySelectorAll('#nav-wa-btn, .hero-wa-btn, #price-wa-btn, #final-wa-btn, #float-wa-btn, #popup-wa-btn')
     .forEach(el => {
       el.setAttribute('href', waHref);
-      // Evento estándar de Meta Pixel: se dispara al hacer clic en cualquier botón de WhatsApp
-      el.addEventListener('click', () => { if (window.fbq) fbq('track', 'Contact'); });
+      // Evento estándar de Meta (píxel + Conversions API): se dispara al hacer clic en cualquier botón de WhatsApp
+      el.addEventListener('click', () => { if (window.sendMetaEvent) sendMetaEvent('Contact'); });
     });
   document.getElementById('ig-discover-btn').setAttribute('href', INSTAGRAM_PROFILE_URL);
 

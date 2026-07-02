@@ -1,13 +1,27 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
+      "has": [{ "type": "host", "value": "algolabmty.com" }],
+      "destination": "/landing",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.algolabmty.com" }],
+      "destination": "/landing",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "algolabmty.com" }],
       "destination": "/landing"
     },
     {
-      "source": "/",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "www.algolabmty.com" }],
       "destination": "/landing"
     }
