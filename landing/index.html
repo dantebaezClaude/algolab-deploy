@@ -50,6 +50,9 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
+<!-- Vercel Web Analytics — requiere activar "Analytics" en el dashboard del proyecto en Vercel -->
+<script defer src="/_vercel/insights/script.js"></script>
+
 <style>
   :root {
     --purple-dark:   #3B0764;
@@ -716,9 +719,8 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
 <script>
   // ══════════════ CONFIGURACIÓN — edita aquí ══════════════
 
-  // Número de WhatsApp (con código de país) y mensaje predefinido
-  const WHATSAPP_NUMBER = '5218123895657';
-  const WHATSAPP_MESSAGE = 'Quiero aprovechar mi cupón de $1,450 por 1 semana';
+  // Página puente: dispara el evento Lead de forma confiable y luego manda a WhatsApp
+  const WHATSAPP_BRIDGE_URL = 'https://algolabmty.com/whats';
 
   // 👉 Pega aquí los links completos de tus reels/publicaciones de Instagram
   // Ejemplo: 'https://www.instagram.com/reel/XXXXXXXXXXX/'
@@ -733,13 +735,9 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
 
   // ══════════════ FIN DE CONFIGURACIÓN ══════════════
 
-  const waHref = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(WHATSAPP_MESSAGE);
+  // Todos los botones de WhatsApp pasan primero por /whats, que dispara el Lead y redirige
   document.querySelectorAll('#nav-wa-btn, .hero-wa-btn, #price-wa-btn, #final-wa-btn, #float-wa-btn, #popup-wa-btn')
-    .forEach(el => {
-      el.setAttribute('href', waHref);
-      // Evento estándar de Meta (píxel + Conversions API): se dispara al hacer clic en cualquier botón de WhatsApp
-      el.addEventListener('click', () => { if (window.sendMetaEvent) sendMetaEvent('Lead'); });
-    });
+    .forEach(el => el.setAttribute('href', WHATSAPP_BRIDGE_URL));
   document.getElementById('ig-discover-btn').setAttribute('href', INSTAGRAM_PROFILE_URL);
 
   // FAQ ACCORDION
@@ -818,8 +816,8 @@ src="https://www.facebook.com/tr?id=2262112711227862&ev=PageView&noscript=1"
         <p class="course-modal-text" style="margin-bottom:0">${c.benefit}</p>
       </div>
       <a class="btn-wa" style="margin-top:.5rem;width:100%;justify-content:center"
-         href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Quiero más información sobre ' + c.title)}"
-         target="_blank" rel="noopener" onclick="if(window.sendMetaEvent) sendMetaEvent('Lead')">💬 Preguntar por ${c.title}</a>
+         href="${WHATSAPP_BRIDGE_URL}?msg=${encodeURIComponent('Quiero más información sobre ' + c.title)}"
+         target="_blank" rel="noopener">💬 Preguntar por ${c.title}</a>
     `;
     courseModalEl.classList.add('open');
   }

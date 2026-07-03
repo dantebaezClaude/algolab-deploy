@@ -16,6 +16,16 @@
   ],
   "rewrites": [
     {
+      "source": "/whats",
+      "has": [{ "type": "host", "value": "algolabmty.com" }],
+      "destination": "/whats"
+    },
+    {
+      "source": "/whats",
+      "has": [{ "type": "host", "value": "www.algolabmty.com" }],
+      "destination": "/whats"
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "algolabmty.com" }],
       "destination": "/landing"
